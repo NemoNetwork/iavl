@@ -1941,8 +1941,8 @@ func TestRoy(t *testing.T) {
 		fmt.Printf("%X\n", hash)
 	}
 
-	tree1 := NewMutableTree(db, 0, false, log.NewNopLogger(), InitialVersionOption(10))
 	tree2 := NewMutableTree(db, 0, false, log.NewNopLogger())
+	tree1 := NewMutableTree(db, 0, false, log.NewNopLogger(), InitialVersionOption(10))
 
 	doStuff(tree1)
 	doStuff(tree2)
