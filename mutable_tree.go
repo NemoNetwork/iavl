@@ -140,7 +140,7 @@ func (tree *MutableTree) Hash() []byte {
 
 // WorkingHash returns the hash of the current working tree.
 func (tree *MutableTree) WorkingHash() []byte {
-	return tree.ImmutableTree.Hash()
+	return tree.ImmutableTree.root.hashWithCount(int64(tree.version))
 }
 
 func (tree *MutableTree) WorkingVersion() int64 {
@@ -794,6 +794,8 @@ func (tree *MutableTree) SaveVersion() ([]byte, int64, error) {
 	tree.ndb.resetLatestVersion(version)
 	tree.version = version
 
+	fmt.Printf("####### tree version %X\n", tree.version)
+
 	// set new working tree
 	tree.ImmutableTree = tree.ImmutableTree.clone()
 	tree.lastSaved = tree.ImmutableTree.clone()
@@ -801,6 +803,9 @@ func (tree *MutableTree) SaveVersion() ([]byte, int64, error) {
 		tree.unsavedFastNodeAdditions = &sync.Map{}
 		tree.unsavedFastNodeRemovals = &sync.Map{}
 	}
+
+	fmt.Printf("####### tree version %X\n", tree.version)
+	fmt.Printf("####### tree last saved version %X\n", tree.version)
 
 	fmt.Printf("####### tree working version %d\n", version)
 	fmt.Printf("####### tree hash %X\n", tree.Hash())
