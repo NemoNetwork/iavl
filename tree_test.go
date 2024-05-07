@@ -1920,3 +1920,32 @@ func TestReferenceRoot(t *testing.T) {
 	_, err = tree.Set([]byte("key1"), []byte("value2"))
 	require.NoError(t, err)
 }
+
+func TestRoy(t *testing.T) {
+	db, err := dbm.NewDB("test", "memdb", "")
+	require.NoError(t, err)
+	defer db.Close()
+
+	doStuff := func(tree *MutableTree) {
+		tree.Set(
+			[]byte("\x50\x61\x72\x61\x6d\x73"),
+			[]byte("\x08\x02\x10\x90\x4e\x18\xdc\x0b\x20\x80\x89\x7a\x28\xa0\x8d\x06\x30\x02\x3a\x05\x02\x3b\x9a\xca\x00"),
+		)
+		var buf bytes.Buffer
+		buf.Grow(tree.root.encodedSize())
+		tree.root.writeBytes(&buf)
+		fmt.Println(buf)
+		hash, _, _ := tree.SaveVersion()
+		fmt.Printf("%X\n", tree.Hash())
+		fmt.Printf("%X\n", tree.WorkingHash())
+		fmt.Printf("%X\n", hash)
+	}
+
+	tree1 := NewMutableTree(db, 0, false, log.NewNopLogger(), InitialVersionOption(10))
+	tree2 := NewMutableTree(db, 0, false, log.NewNopLogger())
+
+	doStuff(tree1)
+	doStuff(tree2)
+
+	require.Error(t, err)
+}
