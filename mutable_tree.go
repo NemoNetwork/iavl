@@ -712,9 +712,6 @@ func (tree *MutableTree) GetVersioned(key []byte, version int64) ([]byte, error)
 func (tree *MutableTree) SaveVersion() ([]byte, int64, error) {
 	isGenesis := (tree.version == 0)
 	version := tree.WorkingVersion()
-	fmt.Printf("####### tree working version %d\n", version)
-	fmt.Printf("####### tree hash %X\n", tree.Hash())
-	fmt.Printf("####### tree working hash %X\n", tree.WorkingHash())
 
 	if tree.VersionExists(version) {
 		// If the version already exists, return an error as we're attempting to overwrite.
@@ -779,22 +776,12 @@ func (tree *MutableTree) SaveVersion() ([]byte, int64, error) {
 		}
 	}
 
-	fmt.Printf("####### tree working version %d\n", version)
-	fmt.Printf("####### tree hash %X\n", tree.Hash())
-	fmt.Printf("####### tree working hash %X\n", tree.WorkingHash())
-
 	if err := tree.ndb.Commit(); err != nil {
 		return nil, version, err
 	}
 
-	fmt.Printf("####### tree working version %d\n", version)
-	fmt.Printf("####### tree hash %X\n", tree.Hash())
-	fmt.Printf("####### tree working hash %X\n", tree.WorkingHash())
-
 	tree.ndb.resetLatestVersion(version)
 	tree.version = version
-
-	fmt.Printf("####### tree version %d\n", tree.version)
 
 	// set new working tree
 	tree.ImmutableTree = tree.ImmutableTree.clone()

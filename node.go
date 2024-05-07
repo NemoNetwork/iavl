@@ -446,6 +446,7 @@ func (node *Node) hashWithCount(version int64) []byte {
 		return sha256.New().Sum(nil)
 	}
 	if node.hash != nil {
+		fmt.Printf("returning old value when passed version %d", version)
 		return node.hash
 	}
 
