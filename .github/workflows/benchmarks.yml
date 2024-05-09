@@ -3,6 +3,7 @@ name: Benchmarks
 on:
   push:
     branches:
+      - roy/*
       - master
   pull_request:
 
